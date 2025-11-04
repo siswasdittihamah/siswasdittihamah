@@ -1,0 +1,1473 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RUMAH BELAJAR SDIT TIHAMAH — Kosakata Sekolah</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+
+<style>
+    :root{
+      --bg:#064e3b; /* hijau gelap */
+      --card:#ffffff;
+      --muted:#d1d5db;
+      --accent:#f9fafb;
+      --primary:#22c55e;
+      --glass:rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
+      color:var(--accent);
+      background:linear-gradient(180deg,#065f46 0%,var(--bg) 100%);
+    }
+    .container{max-width:1200px;margin:36px auto;padding:24px}
+    header{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;margin-bottom:18px}
+    .logo-box{width:90px;height:90px;border-radius:50%;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.25)}
+    .logo-box img{width:100%;height:100%;object-fit:cover}
+    h1{font-size:24px;margin:8px 0 4px;font-weight:800;color:#fff}
+    p.lead{margin:0;color:var(--muted);font-size:14px}
+    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px;justify-content:center}
+    .search,input,select,button{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);background:var(--card);font-size:14px;color:#111}
+    .search{min-width:260px}
+    .actions{display:flex;gap:8px}
+    .card{background:var(--card);border-radius:14px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,0.25);color:#111}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    thead th{position:sticky;top:0;background:#f9fafb;z-index:2;text-align:left;padding:12px 10px;border-bottom:1px solid rgba(0,0,0,0.1)}
+    tbody tr:nth-child(even){background:rgba(34,197,94,0.05)}
+    td{padding:10px;border-bottom:1px solid rgba(0,0,0,0.06);vertical-align:middle}
+    td.center{text-align:center}
+    td[dir="rtl"]{font-family:'Amiri',serif;font-size:16px}
+    .small{font-size:12px;color:#555}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(34,197,94,0.15);color:#15803d;font-weight:600;font-size:12px}
+    .pill{background:#111827;color:#fff;padding:6px 10px;border-radius:999px}
+    .topline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .note{font-size:13px;color:#555;margin-top:8px}
+    @media (max-width:980px){.search{min-width:140px}.container{padding:12px}.logo-box{width:72px;height:72px}}
+    .table-wrap{overflow:auto;margin-top:14px;border-radius:12px}
+    .controls .btn{cursor:pointer}
+    .col-hidden{display:none}
+    @media (max-width:720px){.col-jamak{display:none}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <!-- Logo -->
+      <div class="logo-box">
+        <img src="LOGO SDIT 2023.png" alt="Logo SDIT TIHAMAH" />
+      </div>
+
+      <!-- Judul -->
+      <h1>RUMAH BELAJAR SDIT TIHAMAH</h1>
+      <p class="lead">Kosakata Sekolah — Indonesia / English / IPA / Arab</p>
+
+      <!-- Kontrol -->
+      <div class="controls">
+        <input id="search" class="search" placeholder="Cari kata (Indonesia / English / Arab)..." />
+        <select id="colFilter">
+          <option value="all">Semua Kolom</option>
+          <option value="indonesia">Indonesia</option>
+          <option value="english">English</option>
+          <option value="ipa">IPA</option>
+          <option value="arab">Arab (Mufrad)</option>
+        </select>
+        <div class="actions">
+          <button id="downloadCsv" class="btn">Unduh CSV</button>
+          <button id="downloadXls" class="btn">Unduh Excel</button>
+          <button id="printBtn" class="btn">Cetak</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="topline">
+        <span class="badge">100 kata</span>
+        <div class="note">Klik header untuk mengurutkan. Di perangkat kecil, kolom Jamak disembunyikan otomatis.</div>
+      </div>
+
+      <div class="table-wrap" id="tableWrap">
+        <table id="vocabTable" aria-label="Tabel kosakata">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Indonesia</th>
+              <th>English</th>
+              <th>IPA</th>
+              <th>Arab (Mufrad)</th>
+              <th class="col-jamak">Arab (Jamak)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows by script -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p style="margin-top:12px;color:#e5e7eb;font-size:13px">
+      <strong>operatortihamah@gmail.com</strong>
+    </p>
+  </div>
+
+  <script>
+    // data kosakata (dipotong contoh, lanjutkan sesuai kebutuhan)
+    const data = [
+      {no:1,ind:'Sekolah',eng:'School',ipa:'skuːl',arb:'مَدْرَسَةٌ',jamak:'مَدَارِسُ'},
+      {no:2,ind:'Kelas',eng:'Classroom',ipa:'klɑːsruːm',arb:'فَصْلٌ',jamak:'فُصُولٌ'},
+      {no:3,ind:'Guru',eng:'Teacher',ipa:'tiːtʃə',arb:'مُعَلِّمٌ',jamak:'مُعَلِّمُونَ'},
+      {no:4,ind:'Murid',eng:'Student',ipa:'stjuːdənt',arb:'طَالِبٌ',jamak:'طُلَّابٌ'},
+      {no:5,ind:'Buku',eng:'Book',ipa:'bʊk',arb:'كِتَابٌ',jamak:'كُتُبٌ'},
+{no:6,ind:'Pulpen',eng:'Pen',ipa:'pen',arb:'قَلَمٌ',jamak:'أَقْلَامٌ'},
+{no:7,ind:'Pensil',eng:'Pencil',ipa:'pensl',arb:'مِرْسَمٌ',jamak:'مَرَاسِمُ'},
+{no:8,ind:'Tas',eng:'Bag',ipa:'bæɡ',arb:'حَقِيبَةٌ',jamak:'حَقَائِبُ'},
+{no:9,ind:'Kursi',eng:'Chair',ipa:'tʃeə',arb:'كُرْسِيٌّ',jamak:'كَرَاسِيُّ'},
+{no:10,ind:'Meja',eng:'Table',ipa:'teɪbl',arb:'طَاوِلَةٌ',jamak:'طَاوِلَاتٌ'},
+{no:11,ind:'Papan Tulis',eng:'Board',ipa:'bɔːd',arb:'سَبُّورَةٌ',jamak:'سَبُّورَاتٌ'},
+{no:12,ind:'Penghapus',eng:'Eraser',ipa:'ɪreɪzə',arb:'مِمْحَاةٌ',jamak:'مِمْحَاتٌ'},
+{no:13,ind:'Penggaris',eng:'Ruler',ipa:'ruːlə',arb:'مِسْطَرَةٌ',jamak:'مَسَاطِرُ'},
+{no:14,ind:'Ransel',eng:'Bagpack',ipa:'bækpæk',arb:'حَقِيبَةٌ ظَهْرِيَّةٌ',jamak:'حَقَائِبُ ظَهْرِيَّةٌ'},
+{no:15,ind:'Jendela',eng:'Window',ipa:'wɪndəʊ',arb:'نَافِذَةٌ',jamak:'نَوَافِذُ'},
+{no:16,ind:'Pintu',eng:'Door',ipa:'dɔː',arb:'بَابٌ',jamak:'أَبْوَابٌ'},
+{no:17,ind:'Lantai',eng:'Floor',ipa:'flɔː',arb:'أَرْضِيَّةٌ',jamak:'أَرْضِيَّاتٌ'},
+{no:18,ind:'Dinding',eng:'Wall',ipa:'wɔːl',arb:'جِدَارٌ',jamak:'جُدْرَانٌ'},
+{no:19,ind:'Plafon',eng:'Ceiling',ipa:'siːlɪŋ',arb:'سَقْفٌ',jamak:'سُقُوفٌ'},
+{no:20,ind:'Atap',eng:'Roof',ipa:'ruːf',arb:'سَطْحٌ',jamak:'سُطُوحٌ'},
+{no:21,ind:'Buku Tulis',eng:'Notebook',ipa:'nəʊtbʊk',arb:'دَفْتَرٌ',jamak:'دَفَاتِرُ'},
+{no:22,ind:'Kertas',eng:'Paper',ipa:'peɪpə',arb:'وَرَقَةٌ',jamak:'أَوْرَاقٌ'},
+{no:23,ind:'Peta',eng:'Map',ipa:'mæp',arb:'خَرِيطَةٌ',jamak:'خَرَائِطُ'},
+{no:24,ind:'Tali Tas',eng:'Bag Strap',ipa:'bæɡ stræp',arb:'حِزَامُ الحَقِيبَةِ',jamak:'أَحْزِمَةُ الحَقَائِبِ'},
+{no:25,ind:'Spidol',eng:'Marker',ipa:'mɑːkə',arb:'قَلَمُ التَّلْوِينِ',jamak:'أَقْلَامُ التَّلْوِينِ'},
+{no:26,ind:'Kapur',eng:'Chalk',ipa:'tʃɔːk',arb:'طَبَاشِيرَةٌ',jamak:'طَبَاشِيرُ'},
+{no:27,ind:'Jam Dinding',eng:'Clock',ipa:'klɒk',arb:'سَاعَةٌ',jamak:'سَاعَاتٌ'},
+{no:28,ind:'Kalender',eng:'Calendar',ipa:'kælɪndə',arb:'تَقْوِيمٌ',jamak:'تَقَاوِيمُ'},
+{no:29,ind:'Kipas',eng:'Fan',ipa:'fæn',arb:'مِرْوَحَةٌ',jamak:'مَرَاوِحُ'},
+{no:30,ind:'Lampu',eng:'Lamp',ipa:'læmp',arb:'مِصْبَاحٌ',jamak:'مَصَابِيحُ'},
+{no:31,ind:'Perpustakaan',eng:'Library',ipa:'laɪbrəri',arb:'مَكْتَبَةٌ',jamak:'مَكْتَبَاتٌ'},
+{no:32,ind:'Lemari Buku',eng:'Bookcase',ipa:'bʊkkeɪs',arb:'خِزَانَةُ الكُتُبِ',jamak:'خَزَائِنُ الكُتُبِ'},
+{no:33,ind:'Komputer',eng:'Computer',ipa:'kəmpjuːtə',arb:'حَاسُوبٌ',jamak:'حَوَاسِيبُ'},
+{no:34,ind:'Laptop',eng:'Laptop',ipa:'læptɒp',arb:'حَاسُوبٌ مَحْمُولٌ',jamak:'حَوَاسِيبُ مَحْمُولَةٌ'},
+{no:35,ind:'Tetikus',eng:'Mouse',ipa:'maʊs',arb:'فَأْرَةٌ',jamak:'فِئْرَانٌ'},
+{no:36,ind:'Papan Ketik',eng:'Keyboard',ipa:'kiːbɔːd',arb:'لَوْحُ المَفَاتِيحِ',jamak:'أَلْوَاحُ المَفَاتِيحِ'},
+{no:37,ind:'Layar',eng:'Screen',ipa:'skriːn',arb:'شَاشَةٌ',jamak:'شَاشَاتٌ'},
+{no:38,ind:'Proyektor',eng:'Projector',ipa:'prədʒektə',arb:'جِهَازُ عَرْضٍ',jamak:'أَجْهِزَةُ عَرْضٍ'},
+{no:39,ind:'Kabel',eng:'Cable',ipa:'keɪbl',arb:'سِلْكٌ',jamak:'أَسْلَاكٌ'},
+{no:40,ind:'Colokan',eng:'Plug',ipa:'plʌɡ',arb:'مَقْبَسٌ',jamak:'مَقَابِسُ'},
+{no:41,ind:'Papan Putih',eng:'Whiteboard',ipa:'waɪtbɔːd',arb:'لَوْحٌ أَبْيَضُ',jamak:'أَلْوَاحٌ بِيضٌ'},
+{no:42,ind:'Papan Hitam',eng:'Blackboard',ipa:'blækbɔːd',arb:'سَبُّورَةٌ سَوْدَاءُ',jamak:'سَبُّورَاتٌ سُودٌ'},
+{no:43,ind:'Tempat Sampah',eng:'Trash Can',ipa:'træʃ kæn',arb:'سَلَّةُ المُهْمَلَاتِ',jamak:'سَلَّاتُ المُهْمَلَاتِ'},
+{no:44,ind:'Sapu',eng:'Broom',ipa:'bruːm',arb:'مِكْنَسَةٌ',jamak:'مَكَانِسُ'},
+{no:45,ind:'Pel',eng:'Mop',ipa:'mɒp',arb:'مِمْسَحَةٌ',jamak:'مَمَاسِحُ'},
+{no:46,ind:'Kemoceng',eng:'Duster',ipa:'dʌstə',arb:'مُنَفِّضَةٌ',jamak:'مُنَفِّضَاتٌ'},
+{no:47,ind:'Debu',eng:'Dust',ipa:'dʌst',arb:'غُبَارٌ',jamak:''},
+{no:48,ind:'Keranjang',eng:'Basket',ipa:'bɑːskɪt',arb:'سَلَّةٌ',jamak:'سَلَّاتٌ'},
+{no:49,ind:'Botol',eng:'Bottle',ipa:'bɒtl',arb:'قَارُورَةٌ',jamak:'قَوَارِيرُ'},
+{no:50,ind:'Gelas',eng:'Cup',ipa:'kʌp',arb:'كُوبٌ',jamak:'أَكْوَابٌ'},
+{no:51,ind:'Air',eng:'Water',ipa:'wɔːtə',arb:'مَاءٌ',jamak:'مِيَاهٌ'},
+{no:52,ind:'Wastafel',eng:'Sink',ipa:'sɪŋk',arb:'مَغْسَلَةٌ',jamak:'مَغَاسِلُ'},
+{no:53,ind:'Toilet',eng:'Toilet',ipa:'tɔɪlət',arb:'مِرْحَاضٌ',jamak:'مَرَاحِيضُ'},
+{no:54,ind:'Halaman Bermain',eng:'Playground',ipa:'pleɪɡraʊnd',arb:'مَلْعَبٌ',jamak:'مَلَاعِبُ'},
+{no:55,ind:'Lapangan',eng:'Field',ipa:'fiːld',arb:'سَاحَةٌ',jamak:'سَاحَاتٌ'},
+{no:56,ind:'Taman',eng:'Garden',ipa:'ɡɑːdn',arb:'حَدِيقَةٌ',jamak:'حَدَائِقُ'},
+{no:57,ind:'Pohon',eng:'Tree',ipa:'triː',arb:'شَجَرَةٌ',jamak:'أَشْجَارٌ'},
+{no:58,ind:'Bunga',eng:'Flower',ipa:'flaʊə',arb:'زَهْرَةٌ',jamak:'أَزْهَارٌ'},
+{no:59,ind:'Rumput',eng:'Grass',ipa:'ɡrɑːs',arb:'حَشِيشٌ',jamak:''},
+{no:60,ind:'Batu',eng:'Stone',ipa:'stəʊn',arb:'حَجَرٌ',jamak:'أَحْجَارٌ'},
+{no:61,ind:'Bendera',eng:'Flag',ipa:'flæɡ',arb:'عَلَمٌ',jamak:'أَعْلَامٌ'},
+{no:62,ind:'Tiang Bendera',eng:'Flagpole',ipa:'flæɡpəʊl',arb:'سَارِيَةُ العَلَمِ',jamak:'سَوَارِي العَلَمِ'},
+{no:63,ind:'Lonceng',eng:'Bell',ipa:'bel',arb:'جَرَسٌ',jamak:'أَجْرَاسٌ'},
+{no:64,ind:'Bedug/Tambur',eng:'Drum',ipa:'drʌm',arb:'طَبْلٌ',jamak:'طُبُولٌ'},
+{no:65,ind:'Mikrofon',eng:'Microphone',ipa:'maɪkrəfəʊn',arb:'مِيكْرُوفُونٌ',jamak:'مِيكْرُوفُونَاتٌ'},
+{no:66,ind:'Pengeras Suara',eng:'Speaker',ipa:'spiːkə',arb:'مُكَبِّرُ الصَّوْتِ',jamak:'مُكَبِّرَاتُ الصَّوْتِ'},
+{no:67,ind:'Panggung',eng:'Stage',ipa:'steɪdʒ',arb:'مَسْرَحٌ',jamak:'مَسَارِحُ'},
+{no:68,ind:'Aula',eng:'Hall',ipa:'hɔːl',arb:'قَاعَةٌ',jamak:'قَاعَاتٌ'},
+{no:69,ind:'Kantor',eng:'Office',ipa:'ɒfɪs',arb:'مَكْتَبٌ',jamak:'مَكَاتِبُ'},
+{no:70,ind:'Kepala Sekolah',eng:'Principal',ipa:'prɪnsəpl',arb:'مُدِيرٌ',jamak:'مُدَرَاءُ'},
+{no:71,ind:'Penghapus Papan',eng:'Blackboard Eraser',ipa:'blækbɔːd ɪreɪzə',arb:'مِمْسَحَةٌ',jamak:'مَمَاسِحُ'},
+{no:72,ind:'Laboratorium',eng:'Laboratory',ipa:'ləbɒrətri',arb:'مَعْمَلٌ',jamak:'مَعَامِلُ'},
+{no:73,ind:'Alat',eng:'Tool',ipa:'tuːl',arb:'أَدَاةٌ',jamak:'أَدَوَاتٌ'},
+{no:74,ind:'Percobaan',eng:'Experiment',ipa:'ɪksperɪmənt',arb:'تَجْرِبَةٌ',jamak:'تَجَارِبُ'},
+{no:75,ind:'Botol Kimia',eng:'Bottle of Chemical',ipa:'bɒtl əv kemɪkl',arb:'قَارُورَةُ كِيمْيَاءَ',jamak:'قَوَارِيرُ الكِيمْيَاءَ'},
+{no:76,ind:'Kuas',eng:'Brush',ipa:'brʌʃ',arb:'فُرْشَاةٌ',jamak:'فُرَشٌ'},
+{no:77,ind:'Cat',eng:'Paint',ipa:'peɪnt',arb:'دِهَانٌ',jamak:'دِهَانَاتٌ'},
+{no:78,ind:'Gambar',eng:'Picture',ipa:'pɪktʃə',arb:'صُورَةٌ',jamak:'صُوَرٌ'},
+{no:79,ind:'Poster',eng:'Poster',ipa:'pəʊstə',arb:'لَافِتَةٌ',jamak:'لَوَافِتُ'},
+{no:80,ind:'Pengumuman',eng:'Notice',ipa:'nəʊtɪs',arb:'إِعْلَانٌ',jamak:'إِعْلَانَاتٌ'},
+{no:81,ind:'Koran',eng:'Newspaper',ipa:'njuːzpeɪpə',arb:'صَحِيفَةٌ',jamak:'صُحُفٌ'},
+{no:82,ind:'Majalah',eng:'Magazine',ipa:'mæɡəziːn',arb:'مَجَلَّةٌ',jamak:'مَجَلَّاتٌ'},
+{no:83,ind:'Telepon',eng:'Telephone',ipa:'telɪfəʊn',arb:'هَاتِفٌ',jamak:'هَوَاتِفُ'},
+{no:84,ind:'HP',eng:'Mobile Phone',ipa:'məʊbaɪl fəʊn',arb:'هَاتِفٌ مَحْمُولٌ',jamak:'هَوَاتِفُ مَحْمُولَةٌ'},
+{no:85,ind:'Listrik',eng:'Electricity',ipa:'ɪlektrɪsəti',arb:'كَهْرَبَاءُ',jamak:''},
+{no:86,ind:'Saklar',eng:'Switch',ipa:'swɪtʃ',arb:'مِفْتَاحٌ كَهْرَبَائِيٌّ',jamak:'مَفَاتِيحُ كَهْرَبَائِيَّةٌ'},
+{no:87,ind:'Pagar',eng:'Fence',ipa:'fens',arb:'سُورٌ',jamak:'أَسْوَارٌ'},
+{no:88,ind:'Gerbang',eng:'Gate',ipa:'ɡeɪt',arb:'بَوَّابَةٌ',jamak:'بَوَّابَاتٌ'},
+{no:89,ind:'Jalan Setapak',eng:'Path',ipa:'pɑːθ',arb:'طَرِيقٌ',jamak:'طُرُقٌ'},
+{no:90,ind:'Jalan',eng:'Road',ipa:'rəʊd',arb:'شَارِعٌ',jamak:'شَوَارِعُ'},
+{no:91,ind:'Bus',eng:'Bus',ipa:'bʌs',arb:'حَافِلَةٌ',jamak:'حَافِلَاتٌ'},
+{no:92,ind:'Mobil',eng:'Car',ipa:'kɑː',arb:'سَيَّارَةٌ',jamak:'سَيَّارَاتٌ'},
+{no:93,ind:'Motor',eng:'Motorcycle',ipa:'məʊtəsaɪkl',arb:'دَرَّاجَةٌ نَارِيَّةٌ',jamak:'دَرَّاجَاتٌ نَارِيَّةٌ'},
+{no:94,ind:'Sepeda',eng:'Bicycle',ipa:'baɪsɪkl',arb:'دَرَّاجَةٌ',jamak:'دَرَّاجَاتٌ'},
+{no:95,ind:'Sepatu',eng:'Shoes',ipa:'ʃuːz',arb:'حِذَاءٌ',jamak:'أَحْذِيَةٌ'},
+{no:96,ind:'Kaos Kaki',eng:'Socks',ipa:'sɒks',arb:'جَوْرَبٌ',jamak:'جَوَارِبُ'},
+{no:97,ind:'Seragam',eng:'Uniform',ipa:'juːnɪfɔːm',arb:'زِيٌّ',jamak:'أَزْيَاءُ'},
+{no:98,ind:'Topi',eng:'Hat',ipa:'hæt',arb:'قُبَّعَةٌ',jamak:'قُبَّعَاتٌ'},
+{no:99,ind:'Kacamata',eng:'Glasses',ipa:'ɡlɑːsɪz',arb:'نَظَّارَةٌ',jamak:'نَظَّارَاتٌ'},
+      // ... sampai 100 kata
+      {no:100,ind:'Payung',eng:'Umbrella',ipa:'ʌmbrelə',arb:'مِظَلَّةٌ',jamak:'مِظَلَّاتٌ'},
+       {
+    "no": 174,
+    "ind": "Buku catatan harian",
+    "eng": "Diary",
+    "ipa": "ˈdaɪəri",
+    "arb": "مُذَكِّرَةٌ",
+    "jamak": "مُذَكِّرَاتٌ"
+  },
+  {
+    "no": 175,
+    "ind": "Papan nama kelas",
+    "eng": "Class name board",
+    "ipa": "klɑːs neɪm bɔːd",
+    "arb": "لَوْحُ إِسْمِ الْفَصْلِ",
+    "jamak": "أَلْوَاحُ أَسْمَاءِ الْفُصُولِ"
+  },
+  {
+    "no": 176,
+    "ind": "Tugas rumah",
+    "eng": "Homework",
+    "ipa": "ˈhəʊmwɜːk",
+    "arb": "وَاجِبٌ مَنْزِلِيٌّ",
+    "jamak": "وَاجِبَاتٌ مَنْزِلِيَّةٌ"
+  },
+  {
+    "no": 177,
+    "ind": "Tugas kelompok",
+    "eng": "Group assignment",
+    "ipa": "ɡruːp əˈsaɪnmənt",
+    "arb": "وَاجِبٌ جَمَاعِيٌّ",
+    "jamak": "وَاجِبَاتٌ جَمَاعِيَّةٌ"
+  },
+  {
+    "no": 178,
+    "ind": "Tugas individu",
+    "eng": "Individual task",
+    "ipa": "ˌɪndɪˈvɪdʒuəl tɑːsk",
+    "arb": "وَاجِبٌ فَرْدِيٌّ",
+    "jamak": "وَاجِبَاتٌ فَرْدِيَّةٌ"
+  },
+  {
+    "no": 179,
+    "ind": "Laboratorium komputer",
+    "eng": "Computer lab",
+    "ipa": "kəmˈpjuːtə læb",
+    "arb": "مُخْتَبَرُ الْحَاسُوبِ",
+    "jamak": "مُخْتَبَرَاتُ الْحَاسُوبِ"
+  },
+  {
+    "no": 180,
+    "ind": "Laboratorium bahasa",
+    "eng": "Language lab",
+    "ipa": "ˈlæŋɡwɪdʒ læb",
+    "arb": "مُخْتَبَرُ اللُّغَةِ",
+    "jamak": "مُخْتَبَرَاتُ اللُّغَاتِ"
+  },
+  {
+    "no": 181,
+    "ind": "Jurnal sekolah",
+    "eng": "School journal",
+    "ipa": "skuːl ˈdʒɜːnl",
+    "arb": "مَجَلَّةٌ مَدْرَسِيَّةٌ",
+    "jamak": "مَجَلَّاتٌ مَدْرَسِيَّةٌ"
+  },
+  {
+    "no": 182,
+    "ind": "Alat olahraga",
+    "eng": "Sports equipment",
+    "ipa": "spɔːts ɪˈkwɪpmənt",
+    "arb": "أَدَوَاتُ الرِّيَاضَةِ",
+    "jamak": "أَدَوَاتُ الرِّيَاضَةِ"
+  },
+  {
+    "no": 183,
+    "ind": "Papan skor",
+    "eng": "Scoreboard",
+    "ipa": "ˈskɔːbɔːd",
+    "arb": "لَوْحَةُ النَّتِيجَةِ",
+    "jamak": "لَوْحَاتُ النَّتَائِجِ"
+  },
+  {
+    "no": 184,
+    "ind": "Kartu pelajar",
+    "eng": "Student card",
+    "ipa": "ˈstjuːdənt kɑːd",
+    "arb": "بِطَاقَةُ الطَّالِبِ",
+    "jamak": "بِطَاقَاتُ الطُّلَّابِ"
+  },
+  {
+    "no": 185,
+    "ind": "Seragam olahraga",
+    "eng": "Sports uniform",
+    "ipa": "spɔːts ˈjuːnɪfɔːm",
+    "arb": "زِيٌّ رِيَاضِيٌّ",
+    "jamak": "أَزْيَاءُ رِيَاضِيَّةٌ"
+  },
+  {
+    "no": 186,
+    "ind": "Papan informasi",
+    "eng": "Notice board",
+    "ipa": "ˈnəʊtɪs bɔːd",
+    "arb": "لَوْحُ الإِعْلَانِ",
+    "jamak": "أَلْوَاحُ الإِعْلَانِ"
+  },
+  {
+    "no": 187,
+    "ind": "Tas makan",
+    "eng": "Lunch bag",
+    "ipa": "lʌntʃ bæɡ",
+    "arb": "حَقِيبَةُ الطَّعَامِ",
+    "jamak": "حَقَائِبُ الطَّعَامِ"
+  },
+  {
+    "no": 188,
+    "ind": "Tempat pensil",
+    "eng": "Pencil case",
+    "ipa": "ˈpensl keɪs",
+    "arb": "مِقْلَمَةٌ",
+    "jamak": "مَقَالِمُ"
+  },
+  {
+    "no": 189,
+    "ind": "Alat tulis",
+    "eng": "Stationery",
+    "ipa": "ˈsteɪʃənri",
+    "arb": "أَدَوَاتُ الْكِتَابَةِ",
+    "jamak": "أَدَوَاتُ الْكِتَابَةِ"
+  },
+  {
+    "no": 190,
+    "ind": "Kursi lipat",
+    "eng": "Folding chair",
+    "ipa": "ˈfəʊldɪŋ tʃeə",
+    "arb": "كُرْسِيٌّ قَابِلٌ لِلطَّيِّ",
+    "jamak": "كَرَاسِيُّ قَابِلَةٌ لِلطَّيِّ"
+  },
+  {
+    "no": 191,
+    "ind": "Meja lipat",
+    "eng": "Folding table",
+    "ipa": "ˈfəʊldɪŋ teɪbl",
+    "arb": "مَكْتَبٌ قَابِلٌ لِلطَّيِّ",
+    "jamak": "مَكَاتِبُ قَابِلَةٌ لِلطَّيِّ"
+  },
+  {
+    "no": 192,
+    "ind": "Kamera sekolah",
+    "eng": "School camera",
+    "ipa": "skuːl ˈkæmərə",
+    "arb": "كَامِيرَا الْمَدْرَسَةِ",
+    "jamak": "كَامِيرَاتُ الْمَدَارِسِ"
+  },
+  {
+    "no": 193,
+    "ind": "Alat musik",
+    "eng": "Musical instrument",
+    "ipa": "ˈmjuːzɪkl ˈɪnstrəmənt",
+    "arb": "آلَةٌ مُوسِيقِيَّةٌ",
+    "jamak": "آلَاتٌ مُوسِيقِيَّةٌ"
+  },
+  {
+    "no": 194,
+    "ind": "Papan pengumuman elektronik",
+    "eng": "Electronic board",
+    "ipa": "ɪˌlekˈtrɒnɪk bɔːd",
+    "arb": "لَوْحٌ إِلِكْتْرُونِيٌّ",
+    "jamak": "أَلْوَاحٌ إِلِكْتْرُونِيَّةٌ"
+  },
+  {
+    "no": 195,
+    "ind": "Buku daftar hadir",
+    "eng": "Attendance book",
+    "ipa": "əˈtendəns bʊk",
+    "arb": "دَفْتَرُ الْحُضُورِ",
+    "jamak": "دَفَاتِرُ الْحُضُورِ"
+  },
+  {
+    "no": 196,
+    "ind": "Daftar nilai",
+    "eng": "Grade list",
+    "ipa": "ɡreɪd lɪst",
+    "arb": "قَائِمَةُ الدَّرَجَاتِ",
+    "jamak": "قَوَائِمُ الدَّرَجَاتِ"
+  },
+  {
+    "no": 197,
+    "ind": "Guru piket",
+    "eng": "Duty teacher",
+    "ipa": "ˈdjuːti ˈtiːtʃə",
+    "arb": "مُعَلِّمُ الْمُنَاوَبَةِ",
+    "jamak": "مُعَلِّمُو الْمُنَاوَبَةِ"
+  },
+  {
+    "no": 198,
+    "ind": "Siswa piket",
+    "eng": "Duty student",
+    "ipa": "ˈdjuːti ˈstjuːdənt",
+    "arb": "طَالِبُ الْمُنَاوَبَةِ",
+    "jamak": "طُلَّابُ الْمُنَاوَبَةِ"
+  },
+  {
+    "no": 199,
+    "ind": "Buku panduan",
+    "eng": "Guidebook",
+    "ipa": "ˈɡaɪdbʊk",
+    "arb": "كِتَابُ إِرْشَادٍ",
+    "jamak": "كُتُبُ إِرْشَادٍ"
+  },
+  {
+    "no": 200,
+    "ind": "Peraturan sekolah",
+    "eng": "School rules",
+    "ipa": "skuːl ruːlz",
+    "arb": "قَوَانِينُ الْمَدْرَسَةِ",
+    "jamak": "قَوَانِينُ الْمَدَارِسِ"
+  },
+{
+  "no": 201,
+  "ind": "Kepala Sekolah",
+  "eng": "Principal",
+  "ipa": "ˈprɪnsəpl",
+  "arb": "مُدِيرُ الْمَدْرَسَةِ",
+  "jamak": "مُدَرَاءُ الْمَدَارِسِ"
+},
+{
+  "no": 202,
+  "ind": "Wakil Kepala Sekolah",
+  "eng": "Vice Principal",
+  "ipa": "vaɪs ˈprɪnsəpl",
+  "arb": "وَكِيلُ الْمَدْرَسَةِ",
+  "jamak": "وُكَلَاءُ الْمَدَارِسِ"
+},
+{
+  "no": 203,
+  "ind": "Guru",
+  "eng": "Teacher",
+  "ipa": "ˈtiːtʃə",
+  "arb": "مُعَلِّمٌ",
+  "jamak": "مُعَلِّمُونَ"
+},
+{
+  "no": 204,
+  "ind": "Guru BK",
+  "eng": "Counselor",
+  "ipa": "ˈkaʊnsələ",
+  "arb": "مُرْشِدٌ",
+  "jamak": "مُرْشِدُونَ"
+},
+{
+  "no": 205,
+  "ind": "Petugas TU",
+  "eng": "Administrative staff",
+  "ipa": "ədˌmɪnɪˈstreɪtɪv stɑːf",
+  "arb": "مُوَظَّفُ الْإِدَارَةِ",
+  "jamak": "مُوَظَّفُو الْإِدَارَةِ"
+},
+{
+  "no": 206,
+  "ind": "Bendahara",
+  "eng": "Treasurer",
+  "ipa": "ˈtrɛʒərə",
+  "arb": "أَمِينُ الصُّنْدُوقِ",
+  "jamak": "أُمَنَاءُ الصُّنْدُوقِ"
+},
+{
+  "no": 207,
+  "ind": "Satpam",
+  "eng": "Security guard",
+  "ipa": "sɪˈkjʊərəti ɡɑːd",
+  "arb": "حَارِسُ الْأَمْنِ",
+  "jamak": "حُرَّاسُ الْأَمْنِ"
+},
+{
+  "no": 208,
+  "ind": "Petugas kebersihan",
+  "eng": "Janitor",
+  "ipa": "ˈdʒænɪtə",
+  "arb": "عَامِلُ النَّظَافَةِ",
+  "jamak": "عُمَّالُ النَّظَافَةِ"
+},
+{
+  "no": 209,
+  "ind": "Pustakawan",
+  "eng": "Librarian",
+  "ipa": "laɪˈbreəriən",
+  "arb": "أَمِينُ الْمَكْتَبَةِ",
+  "jamak": "أُمَنَاءُ الْمَكْتَبَةِ"
+},
+{
+  "no": 210,
+  "ind": "Laboran",
+  "eng": "Laboratory assistant",
+  "ipa": "ˈlæbrətəri əˈsɪstənt",
+  "arb": "مُسَاعِدُ الْمُخْتَبَرِ",
+  "jamak": "مُسَاعِدُو الْمُخْتَبَرِ"
+},
+{
+  "no": 211,
+  "ind": "Pembina Osis",
+  "eng": "Student council advisor",
+  "ipa": "ˈstjuːdənt ˈkaʊnsl ədˈvaɪzə",
+  "arb": "مُرْشِدُ مَجْلِسِ الطُّلَّابِ",
+  "jamak": "مُرْشِدُو مَجَالِسِ الطُّلَّابِ"
+},
+{
+  "no": 212,
+  "ind": "Pembina Pramuka",
+  "eng": "Scoutmaster",
+  "ipa": "ˈskaʊtˌmɑːstə",
+  "arb": "قَائِدُ الْكِشَّافِ",
+  "jamak": "قَادَةُ الْكِشَّافِ"
+},
+{
+  "no": 213,
+  "ind": "Pelatih olahraga",
+  "eng": "Sports coach",
+  "ipa": "spɔːts kəʊtʃ",
+  "arb": "مُدَرِّبُ الرِّيَاضَةِ",
+  "jamak": "مُدَرِّبُو الرِّيَاضَةِ"
+},
+{
+  "no": 214,
+  "ind": "Dokter sekolah",
+  "eng": "School doctor",
+  "ipa": "skuːl ˈdɒktə",
+  "arb": "طَبِيبُ الْمَدْرَسَةِ",
+  "jamak": "أَطِبَّاءُ الْمَدَارِسِ"
+},
+{
+  "no": 215,
+  "ind": "Perawat sekolah",
+  "eng": "School nurse",
+  "ipa": "skuːl nɜːs",
+  "arb": "مُمَرِّضَةُ الْمَدْرَسَةِ",
+  "jamak": "مُمَرِّضَاتُ الْمَدَارِسِ"
+},
+{
+  "no": 216,
+  "ind": "Pengawas sekolah",
+  "eng": "School supervisor",
+  "ipa": "skuːl ˈsuːpəvaɪzə",
+  "arb": "مُرَاقِبُ الْمَدْرَسَةِ",
+  "jamak": "مُرَاقِبُو الْمَدَارِسِ"
+},
+{
+  "no": 217,
+  "ind": "Operator sekolah",
+  "eng": "School operator",
+  "ipa": "skuːl ˈɒpəreɪtə",
+  "arb": "مُشَغِّلُ الْمَدْرَسَةِ",
+  "jamak": "مُشَغِّلُو الْمَدَارِسِ"
+},
+{
+  "no": 218,
+  "ind": "Petugas kantin",
+  "eng": "Canteen staff",
+  "ipa": "kænˈtiːn stɑːf",
+  "arb": "عَامِلُ الْمَقْصَفِ",
+  "jamak": "عُمَّالُ الْمَقَاصِفِ"
+},
+{
+  "no": 219,
+  "ind": "Petugas koperasi",
+  "eng": "Cooperative staff",
+  "ipa": "kəʊˈɒpərətɪv stɑːf",
+  "arb": "مُوَظَّفُ التَّعَاوُنِيَّةِ",
+  "jamak": "مُوَظَّفُو التَّعَاوُنِيَّةِ"
+},
+{
+  "no": 220,
+  "ind": "Petugas parkir",
+  "eng": "Parking attendant",
+  "ipa": "ˈpɑːkɪŋ əˈtɛndənt",
+  "arb": "مُشْرِفُ الْمَوَاقِفِ",
+  "jamak": "مُشْرِفُو الْمَوَاقِفِ"
+},
+{
+  "no": 221,
+  "ind": "Penjaga gerbang",
+  "eng": "Gatekeeper",
+  "ipa": "ˈɡeɪtˌkiːpə",
+  "arb": "حَارِسُ الْبَوَّابَةِ",
+  "jamak": "حُرَّاسُ الْبَوَّابَاتِ"
+},
+{
+  "no": 222,
+  "ind": "Teknisi komputer",
+  "eng": "Computer technician",
+  "ipa": "kəmˈpjuːtə tɛkˈnɪʃən",
+  "arb": "فَنِّيُّ الْحَاسُوبِ",
+  "jamak": "فَنِّيُّو الْحَوَاسِيبِ"
+},
+{
+  "no": 223,
+  "ind": "Instruktur ekstrakurikuler",
+  "eng": "Extracurricular instructor",
+  "ipa": "ˌɛkstrəkəˈrɪkjələ ɪnˈstrʌktə",
+  "arb": "مُدَرِّبُ النَّشَاطِ اللَّاصَفِّيِّ",
+  "jamak": "مُدَرِّبُو الْأَنْشِطَةِ اللَّاصَفِّيَّةِ"
+},
+{
+  "no": 224,
+  "ind": "Guru les tambahan",
+  "eng": "Private tutor",
+  "ipa": "ˈpraɪvət ˈtjuːtə",
+  "arb": "مُعَلِّمٌ خَاصٌّ",
+  "jamak": "مُعَلِّمُونَ خَاصُّونَ"
+},
+{
+  "no": 225,
+  "ind": "Petugas UKS",
+  "eng": "School health officer",
+  "ipa": "skuːl hɛlθ ˈɒfɪsə",
+  "arb": "مُوَظَّفُ الْعِيَادَةِ الْمَدْرَسِيَّةِ",
+  "jamak": "مُوَظَّفُو الْعِيَادَاتِ الْمَدْرَسِيَّةِ"
+},
+{
+  "no": 226,
+  "ind": "Petugas laboratorium komputer",
+  "eng": "Computer lab assistant",
+  "ipa": "kəmˈpjuːtə læb əˈsɪstənt",
+  "arb": "مُسَاعِدُ مَخْتَبَرِ الْحَاسُوبِ",
+  "jamak": "مُسَاعِدُو مَخَابِرِ الْحَاسُوبِ"
+},
+{
+  "no": 227,
+  "ind": "Penanggung jawab ekstrakurikuler",
+  "eng": "Extracurricular coordinator",
+  "ipa": "ˌɛkstrəkəˈrɪkjələ kəʊˈɔːdɪneɪtə",
+  "arb": "مُنَسِّقُ النَّشَاطِ اللَّاصَفِّيِّ",
+  "jamak": "مُنَسِّقُو الْأَنْشِطَةِ اللَّاصَفِّيَّةِ"
+},
+{
+  "no": 228,
+  "ind": "Pembina upacara",
+  "eng": "Ceremony instructor",
+  "ipa": "ˈsɛrɪməni ɪnˈstrʌktə",
+  "arb": "مُشْرِفُ الْمَرَاسِمِ",
+  "jamak": "مُشْرِفُو الْمَرَاسِمِ"
+},
+{
+  "no": 229,
+  "ind": "Pengawas ujian",
+  "eng": "Exam supervisor",
+  "ipa": "ɪɡˈzæm ˈsuːpəvaɪzə",
+  "arb": "مُرَاقِبُ الِامْتِحَانِ",
+  "jamak": "مُرَاقِبُو الِامْتِحَانَاتِ"
+},
+{
+  "no": 230,
+  "ind": "Koordinator kelas",
+  "eng": "Class coordinator",
+  "ipa": "klɑːs kəʊˈɔːdɪneɪtə",
+  "arb": "مُنَسِّقُ الْفَصْلِ",
+  "jamak": "مُنَسِّقُو الْفُصُولِ"
+},
+{
+  "no": 231,
+  "ind": "Ketua kelas",
+  "eng": "Class leader",
+  "ipa": "klɑːs ˈliːdə",
+  "arb": "رَئِيسُ الْفَصْلِ",
+  "jamak": "رُؤَسَاءُ الْفُصُولِ"
+},
+{
+  "no": 232,
+  "ind": "Wakil ketua kelas",
+  "eng": "Vice class leader",
+  "ipa": "vaɪs klɑːs ˈliːdə",
+  "arb": "نَائِبُ رَئِيسِ الْفَصْلِ",
+  "jamak": "نُوَّابُ رُؤَسَاءِ الْفُصُولِ"
+},
+{
+  "no": 233,
+  "ind": "Sekretaris kelas",
+  "eng": "Class secretary",
+  "ipa": "klɑːs ˈsɛkrətri",
+  "arb": "أَمِينُ سِرِّ الْفَصْلِ",
+  "jamak": "أُمَنَاءُ سِرِّ الْفُصُولِ"
+},
+{
+  "no": 234,
+  "ind": "Bendahara kelas",
+  "eng": "Class treasurer",
+  "ipa": "klɑːs ˈtrɛʒərə",
+  "arb": "أَمِينُ صُنْدُوقِ الْفَصْلِ",
+  "jamak": "أُمَنَاءُ صُنْدُوقِ الْفُصُولِ"
+},
+{
+  "no": 235,
+  "ind": "Ketua OSIS",
+  "eng": "Student council president",
+  "ipa": "ˈstjuːdənt ˈkaʊnsl ˈprɛzɪdənt",
+  "arb": "رَئِيسُ مَجْلِسِ الطُّلَّابِ",
+  "jamak": "رُؤَسَاءُ مَجَالِسِ الطُّلَّابِ"
+},
+{
+  "no": 236,
+  "ind": "Wakil ketua OSIS",
+  "eng": "Vice student council president",
+  "ipa": "vaɪs ˈstjuːdənt ˈkaʊnsl ˈprɛzɪdənt",
+  "arb": "نَائِبُ رَئِيسِ مَجْلِسِ الطُّلَّابِ",
+  "jamak": "نُوَّابُ رُؤَسَاءِ مَجَالِسِ الطُّلَّابِ"
+},
+{
+  "no": 237,
+  "ind": "Sekretaris OSIS",
+  "eng": "Student council secretary",
+  "ipa": "ˈstjuːdənt ˈkaʊnsl ˈsɛkrətri",
+  "arb": "أَمِينُ سِرِّ مَجْلِسِ الطُّلَّابِ",
+  "jamak": "أُمَنَاءُ سِرِّ مَجَالِسِ الطُّلَّابِ"
+},
+{
+  "no": 238,
+  "ind": "Bendahara OSIS",
+  "eng": "Student council treasurer",
+  "ipa": "ˈstjuːdənt ˈkaʊnsl ˈtrɛʒərə",
+  "arb": "أَمِينُ صُنْدُوقِ مَجْلِسِ الطُّلَّابِ",
+  "jamak": "أُمَنَاءُ صُنْدُوقِ مَجَالِسِ الطُّلَّابِ"
+},
+{
+  "no": 239,
+  "ind": "Anggota OSIS",
+  "eng": "Student council member",
+  "ipa": "ˈstjuːdənt ˈkaʊnsl ˈmɛmbə",
+  "arb": "عُضْوُ مَجْلِسِ الطُّلَّابِ",
+  "jamak": "أَعْضَاءُ مَجَالِسِ الطُّلَّابِ"
+},
+{
+  "no": 240,
+  "ind": "Pembina ekstrakurikuler",
+  "eng": "Extracurricular supervisor",
+  "ipa": "ˌɛkstrəkəˈrɪkjələ ˈsuːpəvaɪzə",
+  "arb": "مُرَاقِبُ النَّشَاطِ اللَّاصَفِّيِّ",
+  "jamak": "مُرَاقِبُو الْأَنْشِطَةِ اللَّاصَفِّيَّةِ"
+},
+{
+  "no": 241,
+  "ind": "Pembina upacara bendera",
+  "eng": "Flag ceremony instructor",
+  "ipa": "flæɡ ˈsɛrɪməni ɪnˈstrʌktə",
+  "arb": "مُشْرِفُ مَرَاسِمِ الرَّايَةِ",
+  "jamak": "مُشْرِفُو مَرَاسِمِ الرَّايَاتِ"
+},
+{
+  "no": 242,
+  "ind": "Dirigen paduan suara",
+  "eng": "Choir conductor",
+  "ipa": "ˈkwaɪə kənˈdʌktə",
+  "arb": "قَائِدُ الْجَوْقَةِ",
+  "jamak": "قَادَةُ الْجَوْقَاتِ"
+},
+{
+  "no": 243,
+  "ind": "Pelatih marching band",
+  "eng": "Marching band coach",
+  "ipa": "ˈmɑːtʃɪŋ bænd kəʊtʃ",
+  "arb": "مُدَرِّبُ فَرِيقِ الْمُوسِيقَى الْعَسْكَرِيَّةِ",
+  "jamak": "مُدَرِّبُو فِرَقِ الْمُوسِيقَى الْعَسْكَرِيَّةِ"
+},
+{
+  "no": 244,
+  "ind": "Koordinator ekstrakurikuler",
+  "eng": "Extracurricular coordinator",
+  "ipa": "ˌɛkstrəkəˈrɪkjələ kəʊˈɔːdɪneɪtə",
+  "arb": "مُنَسِّقُ النَّشَاطِ اللَّاصَفِّيِّ",
+  "jamak": "مُنَسِّقُو الْأَنْشِطَةِ اللَّاصَفِّيَّةِ"
+},
+{
+  "no": 245,
+  "ind": "Guru pendamping",
+  "eng": "Assistant teacher",
+  "ipa": "əˈsɪstənt ˈtiːtʃə",
+  "arb": "مُعَلِّمٌ مُسَاعِدٌ",
+  "jamak": "مُعَلِّمُونَ مُسَاعِدُونَ"
+},
+{
+  "no": 246,
+  "ind": "Pengawas asrama",
+  "eng": "Dormitory supervisor",
+  "ipa": "ˈdɔːmɪtəri ˈsuːpəvaɪzə",
+  "arb": "مُرَاقِبُ السَّكَنِ الدَّرَاسِيِّ",
+  "jamak": "مُرَاقِبُو السَّكَانَاتِ الدِّرَاسِيَّةِ"
+},
+{
+  "no": 247,
+  "ind": "Wali kelas",
+  "eng": "Homeroom teacher",
+  "ipa": "ˈhəʊmruːm ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الْفَصْلِ",
+  "jamak": "مُعَلِّمُو الْفُصُولِ"
+},
+{
+  "no": 248,
+  "ind": "Pembimbing akademik",
+  "eng": "Academic advisor",
+  "ipa": "ˌækəˈdɛmɪk ədˈvaɪzə",
+  "arb": "مُرْشِدٌ أَكَادِيمِيٌّ",
+  "jamak": "مُرْشِدُونَ أَكَادِيمِيُّونَ"
+},
+{
+  "no": 249,
+  "ind": "Penanggung jawab kegiatan",
+  "eng": "Activity coordinator",
+  "ipa": "ækˈtɪvɪti kəʊˈɔːdɪneɪtə",
+  "arb": "مُنَسِّقُ الْأَنْشِطَةِ",
+  "jamak": "مُنَسِّقُو الْأَنْشِطَةِ"
+},
+{
+  "no": 250,
+  "ind": "Relawan sekolah",
+  "eng": "School volunteer",
+  "ipa": "skuːl ˌvɒlənˈtɪə",
+  "arb": "مُتَطَوِّعُ الْمَدْرَسَةِ",
+  "jamak": "مُتَطَوِّعُو الْمَدَارِسِ"
+},
+{
+  "no": 251,
+  "ind": "Pembina Rohis",
+  "eng": "Islamic student organization advisor",
+  "ipa": "ɪzˈlæmɪk ˈstjuːdənt ˌɔːɡənaɪˈzeɪʃən ədˈvaɪzə",
+  "arb": "مُرْشِدُ التَّنْظِيمِ الإِسْلَامِيِّ الطُّلَّابِيِّ",
+  "jamak": "مُرْشِدُو التَّنْظِيمَاتِ الإِسْلَامِيَّةِ الطُّلَّابِيَّةِ"
+},
+{
+  "no": 252,
+  "ind": "Petugas upacara",
+  "eng": "Ceremony officer",
+  "ipa": "ˈsɛrɪməni ˈɒfɪsə",
+  "arb": "مُوَظَّفُ الْمَرَاسِمِ",
+  "jamak": "مُوَظَّفُو الْمَرَاسِمِ"
+},
+{
+  "no": 253,
+  "ind": "Petugas perpustakaan",
+  "eng": "Library staff",
+  "ipa": "ˈlaɪbrəri stɑːf",
+  "arb": "مُوَظَّفُ الْمَكْتَبَةِ",
+  "jamak": "مُوَظَّفُو الْمَكْتَبَاتِ"
+},
+{
+  "no": 254,
+  "ind": "Pengawas kegiatan",
+  "eng": "Activity supervisor",
+  "ipa": "ækˈtɪvɪti ˈsuːpəvaɪzə",
+  "arb": "مُرَاقِبُ الْأَنْشِطَةِ",
+  "jamak": "مُرَاقِبُو الْأَنْشِطَةِ"
+},
+{
+  "no": 255,
+  "ind": "Instruktur seni",
+  "eng": "Art instructor",
+  "ipa": "ɑːt ɪnˈstrʌktə",
+  "arb": "مُدَرِّسُ الْفُنُونِ",
+  "jamak": "مُدَرِّسُو الْفُنُونِ"
+},
+{
+  "no": 256,
+  "ind": "Instruktur musik",
+  "eng": "Music instructor",
+  "ipa": "ˈmjuːzɪk ɪnˈstrʌktə",
+  "arb": "مُدَرِّسُ الْمُوسِيقَى",
+  "jamak": "مُدَرِّسُو الْمُوسِيقَى"
+},
+{
+  "no": 257,
+  "ind": "Pelatih tari",
+  "eng": "Dance coach",
+  "ipa": "dɑːns kəʊtʃ",
+  "arb": "مُدَرِّبُ الرَّقْصِ",
+  "jamak": "مُدَرِّبُو الرَّقْصِ"
+},
+{
+  "no": 258,
+  "ind": "Pembimbing lomba",
+  "eng": "Competition mentor",
+  "ipa": "ˌkɒmpəˈtɪʃən ˈmɛntɔː",
+  "arb": "مُرْشِدُ الْمُسَابَقَاتِ",
+  "jamak": "مُرْشِدُو الْمُسَابَقَاتِ"
+},
+{
+  "no": 259,
+  "ind": "Petugas dokumentasi",
+  "eng": "Documentation staff",
+  "ipa": "ˌdɒkjʊmɛnˈteɪʃən stɑːf",
+  "arb": "مُوَظَّفُ التَّوْثِيقِ",
+  "jamak": "مُوَظَّفُو التَّوْثِيقِ"
+},
+{
+  "no": 260,
+  "ind": "Fotografer sekolah",
+  "eng": "School photographer",
+  "ipa": "skuːl fəˈtɒɡrəfə",
+  "arb": "مُصَوِّرُ الْمَدْرَسَةِ",
+  "jamak": "مُصَوِّرُو الْمَدَارِسِ"
+},
+{
+  "no": 261,
+  "ind": "Petugas kebun",
+  "eng": "Gardener",
+  "ipa": "ˈɡɑːdnə",
+  "arb": "بُسْتَانِيٌّ",
+  "jamak": "بُسْتَانِيُّونَ"
+},
+{
+  "no": 262,
+  "ind": "Sopir sekolah",
+  "eng": "School driver",
+  "ipa": "skuːl ˈdraɪvə",
+  "arb": "سَائِقُ الْمَدْرَسَةِ",
+  "jamak": "سَائِقُو الْمَدَارِسِ"
+},
+{
+  "no": 263,
+  "ind": "Asisten laboratorium",
+  "eng": "Lab assistant",
+  "ipa": "læb əˈsɪstənt",
+  "arb": "مُسَاعِدُ الْمُخْتَبَرِ",
+  "jamak": "مُسَاعِدُو الْمُخْتَبَرَاتِ"
+},
+{
+  "no": 264,
+  "ind": "Teknisi listrik",
+  "eng": "Electric technician",
+  "ipa": "ɪˈlɛktrɪk tɛkˈnɪʃən",
+  "arb": "فَنِّيُّ الْكَهْرَبَاءِ",
+  "jamak": "فَنِّيُّو الْكَهْرَبَاءِ"
+},
+{
+  "no": 265,
+  "ind": "Teknisi jaringan",
+  "eng": "Network technician",
+  "ipa": "ˈnɛtwɜːk tɛkˈnɪʃən",
+  "arb": "فَنِّيُّ الشَّبَكَةِ",
+  "jamak": "فَنِّيُّو الشَّبَكَاتِ"
+},
+{
+  "no": 266,
+  "ind": "Instruktur komputer",
+  "eng": "Computer instructor",
+  "ipa": "kəmˈpjuːtə ɪnˈstrʌktə",
+  "arb": "مُدَرِّسُ الْحَاسُوبِ",
+  "jamak": "مُدَرِّسُو الْحَوَاسِيبِ"
+},
+{
+  "no": 267,
+  "ind": "Pelatih bahasa",
+  "eng": "Language instructor",
+  "ipa": "ˈlæŋɡwɪdʒ ɪnˈstrʌktə",
+  "arb": "مُدَرِّسُ اللُّغَةِ",
+  "jamak": "مُدَرِّسُو اللُّغَاتِ"
+},
+{
+  "no": 268,
+  "ind": "Pembimbing prakerin",
+  "eng": "Internship supervisor",
+  "ipa": "ˈɪntɜːnʃɪp ˈsuːpəvaɪzə",
+  "arb": "مُرَاقِبُ التَّدْرِيبِ الْعَمَلِيِّ",
+  "jamak": "مُرَاقِبُو التَّدْرِيبَاتِ الْعَمَلِيَّةِ"
+},
+{
+  "no": 269,
+  "ind": "Instruktur kepramukaan",
+  "eng": "Scouting instructor",
+  "ipa": "ˈskaʊtɪŋ ɪnˈstrʌktə",
+  "arb": "مُدَرِّبُ الْكِشَّافَةِ",
+  "jamak": "مُدَرِّبُو الْكِشَّافَةِ"
+},
+{
+  "no": 270,
+  "ind": "Pembina UKS",
+  "eng": "School health advisor",
+  "ipa": "skuːl hɛlθ ədˈvaɪzə",
+  "arb": "مُرْشِدُ الْعِيَادَةِ الْمَدْرَسِيَّةِ",
+  "jamak": "مُرْشِدُو الْعِيَادَاتِ الْمَدْرَسِيَّةِ"
+},
+{
+  "no": 271,
+  "ind": "Koordinator piket",
+  "eng": "Duty coordinator",
+  "ipa": "ˈdjuːti kəʊˈɔːdɪneɪtə",
+  "arb": "مُنَسِّقُ الْمُنَاوَبَةِ",
+  "jamak": "مُنَسِّقُو الْمُنَاوَبَاتِ"
+},
+{
+  "no": 272,
+  "ind": "Petugas medis",
+  "eng": "Medical staff",
+  "ipa": "ˈmɛdɪkəl stɑːf",
+  "arb": "الطَّاقِمُ الطِّبِّيُّ",
+  "jamak": "الأَطْبَاءُ وَالْمُمَرِّضُونَ"
+},
+{
+  "no": 273,
+  "ind": "Petugas keamanan",
+  "eng": "Safety officer",
+  "ipa": "ˈseɪfti ˈɒfɪsə",
+  "arb": "مُوَظَّفُ السَّلَامَةِ",
+  "jamak": "مُوَظَّفُو السَّلَامَةِ"
+},
+{
+  "no": 274,
+  "ind": "Pembina karang taruna sekolah",
+  "eng": "Youth organization advisor",
+  "ipa": "juːθ ˌɔːɡənaɪˈzeɪʃən ədˈvaɪzə",
+  "arb": "مُرْشِدُ مُنَظَّمَةِ الشَّبَابِ",
+  "jamak": "مُرْشِدُو مُنَظَّمَاتِ الشَّبَابِ"
+},
+{
+  "no": 275,
+  "ind": "Pelatih bela diri",
+  "eng": "Martial arts coach",
+  "ipa": "ˈmɑːʃəl ɑːts kəʊtʃ",
+  "arb": "مُدَرِّبُ الْفُنُونِ الْقِتَالِيَّةِ",
+  "jamak": "مُدَرِّبُو الْفُنُونِ الْقِتَالِيَّةِ"
+},
+{
+  "no": 276,
+  "ind": "Instruktur Paskibra",
+  "eng": "Flag-hoisting instructor",
+  "ipa": "flæɡ ˈhɔɪstɪŋ ɪnˈstrʌktə",
+  "arb": "مُدَرِّبُ رَفْعِ الرَّايَةِ",
+  "jamak": "مُدَرِّبُو رَفْعِ الرَّايَاتِ"
+},
+{
+  "no": 277,
+  "ind": "Pembina seni",
+  "eng": "Art supervisor",
+  "ipa": "ɑːt ˈsuːpəvaɪzə",
+  "arb": "مُشْرِفُ الْفُنُونِ",
+  "jamak": "مُشْرِفُو الْفُنُونِ"
+},
+{
+  "no": 278,
+  "ind": "Pengurus koperasi siswa",
+  "eng": "Student cooperative manager",
+  "ipa": "ˈstjuːdənt kəʊˈɒpərətɪv ˈmænɪdʒə",
+  "arb": "مُدِيرُ تَعَاوُنِيَّةِ الطُّلَّابِ",
+  "jamak": "مُدَرَاءُ تَعَاوُنِيَّاتِ الطُّلَّابِ"
+},
+{
+  "no": 279,
+  "ind": "Petugas UKS harian",
+  "eng": "Daily health officer",
+  "ipa": "ˈdeɪli hɛlθ ˈɒfɪsə",
+  "arb": "مُوَظَّفُ الصِّحَّةِ الْيَوْمِيِّ",
+  "jamak": "مُوَظَّفُو الصِّحَّةِ الْيَوْمِيَّةِ"
+},
+{
+  "no": 280,
+  "ind": "Penanggung jawab keamanan",
+  "eng": "Security coordinator",
+  "ipa": "sɪˈkjʊərəti kəʊˈɔːdɪneɪtə",
+  "arb": "مُنَسِّقُ الْأَمْنِ",
+  "jamak": "مُنَسِّقُو الْأَمْنِ"
+},
+
+{
+  "no": 281,
+  "ind": "Koordinator ekstrakurikuler olahraga",
+  "eng": "Sports extracurricular coordinator",
+  "ipa": "spɔːts ˌɛkstrəkəˈrɪkjələ kəʊˈɔːdɪneɪtə",
+  "arb": "مُنَسِّقُ النَّشَاطِ الرِّيَاضِيِّ اللَّاصَفِّيِّ",
+  "jamak": "مُنَسِّقُو النَّشَاطِ الرِّيَاضِيِّ اللَّاصَفِّيِّ"
+},
+{
+  "no": 282,
+  "ind": "Pembimbing kegiatan seni",
+  "eng": "Art activity supervisor",
+  "ipa": "ɑːt ækˈtɪvɪti ˈsuːpəvaɪzə",
+  "arb": "مُرَاقِبُ أَنْشِطَةِ الْفُنُونِ",
+  "jamak": "مُرَاقِبُو أَنْشِطَةِ الْفُنُونِ"
+},
+{
+  "no": 283,
+  "ind": "Instruktur olahraga",
+  "eng": "Sports instructor",
+  "ipa": "spɔːts ɪnˈstrʌktə",
+  "arb": "مُدَرِّبُ الرِّيَاضَةِ",
+  "jamak": "مُدَرِّبُو الرِّيَاضَةِ"
+},
+{
+  "no": 284,
+  "ind": "Petugas perpustakaan digital",
+  "eng": "Digital library staff",
+  "ipa": "ˈdɪdʒɪtl ˈlaɪbrəri stɑːf",
+  "arb": "مُوَظَّفُ الْمَكْتَبَةِ الرَّقْمِيَّةِ",
+  "jamak": "مُوَظَّفُو الْمَكْتَبَاتِ الرَّقْمِيَّةِ"
+},
+{
+  "no": 285,
+  "ind": "Petugas IT",
+  "eng": "IT staff",
+  "ipa": "aɪ tiː stɑːf",
+  "arb": "مُوَظَّفُ تِقْنِيَّةِ الْمَعْلُومَاتِ",
+  "jamak": "مُوَظَّفُو تِقْنِيَّةِ الْمَعْلُومَاتِ"
+},
+{
+  "no": 286,
+  "ind": "Pembina pramuka tingkat lanjut",
+  "eng": "Senior scoutmaster",
+  "ipa": "ˈsiːnjə skaʊtˌmɑːstə",
+  "arb": "قَائِدُ الْكِشَّافَةِ الْمُتَقَدِّمِ",
+  "jamak": "قَادَةُ الْكِشَّافَةِ الْمُتَقَدِّمِينَ"
+},
+{
+  "no": 287,
+  "ind": "Instruktur teater",
+  "eng": "Theater instructor",
+  "ipa": "ˈθɪətə ɪnˈstrʌktə",
+  "arb": "مُدَرِّسُ الْمَسْرَحِ",
+  "jamak": "مُدَرِّسُو الْمَسَارِحِ"
+},
+{
+  "no": 288,
+  "ind": "Koordinator literasi",
+  "eng": "Literacy coordinator",
+  "ipa": "ˈlɪtərəsi kəʊˈɔːdɪneɪtə",
+  "arb": "مُنَسِّقُ الْمُحَارَبَةِ الْقِرَائِيَّةِ",
+  "jamak": "مُنَسِّقُو الْمُحَارَبَاتِ الْقِرَائِيَّةِ"
+},
+{
+  "no": 289,
+  "ind": "Petugas laboratorium IPA",
+  "eng": "Science lab assistant",
+  "ipa": "ˈsaɪəns læb əˈsɪstənt",
+  "arb": "مُسَاعِدُ مُخْتَبَرِ الْعُلُومِ",
+  "jamak": "مُسَاعِدُو مُخَابِرِ الْعُلُومِ"
+},
+{
+  "no": 290,
+  "ind": "Petugas kebersihan harian",
+  "eng": "Daily cleaning staff",
+  "ipa": "ˈdeɪli ˈkliːnɪŋ stɑːf",
+  "arb": "مُوَظَّفُ النَّظَافَةِ الْيَوْمِيِّ",
+  "jamak": "مُوَظَّفُو النَّظَافَةِ الْيَوْمِيَّةِ"
+},
+{
+  "no": 291,
+  "ind": "Koordinator kesehatan sekolah",
+  "eng": "School health coordinator",
+  "ipa": "skuːl hɛlθ kəʊˈɔːdɪneɪtə",
+  "arb": "مُنَسِّقُ الصِّحَّةِ الْمَدْرَسِيَّةِ",
+  "jamak": "مُنَسِّقُو الصِّحَّةِ الْمَدْرَسِيَّةِ"
+},
+{
+  "no": 292,
+  "ind": "Petugas dokumentasi acara",
+  "eng": "Event documentation staff",
+  "ipa": "ɪˈvɛnt ˌdɒkjʊmɛnˈteɪʃən stɑːf",
+  "arb": "مُوَظَّفُ توثيقِ الْأَحْدَاثِ",
+  "jamak": "مُوَظَّفُو توثيقِ الْأَحْدَاثِ"
+},
+{
+  "no": 293,
+  "ind": "Instruktur fotografi",
+  "eng": "Photography instructor",
+  "ipa": "fəˈtɒɡrəfi ɪnˈstrʌktə",
+  "arb": "مُدَرِّسُ التَّصْوِيرِ",
+  "jamak": "مُدَرِّسُو التَّصْوِيرِ"
+},
+{
+  "no": 294,
+  "ind": "Petugas komputer harian",
+  "eng": "Daily computer staff",
+  "ipa": "ˈdeɪli kəmˈpjuːtə stɑːf",
+  "arb": "مُوَظَّفُ الْحَاسُوبِ الْيَوْمِيِّ",
+  "jamak": "مُوَظَّفُو الْحَوَاسِيبِ الْيَوْمِيَّةِ"
+},
+{
+  "no": 295,
+  "ind": "Koordinator keamanan harian",
+  "eng": "Daily security coordinator",
+  "ipa": "ˈdeɪli sɪˈkjʊərəti kəʊˈɔːdɪneɪtə",
+  "arb": "مُنَسِّقُ الْأَمْنِ الْيَوْمِيِّ",
+  "jamak": "مُنَسِّقُو الْأَمْنِ الْيَوْمِيِّ"
+},
+{
+  "no": 296,
+  "ind": "Petugas transportasi sekolah",
+  "eng": "School transportation staff",
+  "ipa": "skuːl ˌtrænspɔːˈteɪʃən stɑːf",
+  "arb": "مُوَظَّفُ نَقْلِ الْمَدْرَسَةِ",
+  "jamak": "مُوَظَّفُو نَقْلِ الْمَدَارِسِ"
+},
+{
+  "no": 297,
+  "ind": "Petugas inventaris",
+  "eng": "Inventory staff",
+  "ipa": "ˈɪnvəntri stɑːf",
+  "arb": "مُوَظَّفُ الْجَرِيدَةِ",
+  "jamak": "مُوَظَّفُو الْجَرَائِدِ"
+},
+{
+  "no": 298,
+  "ind": "Instruktur keterampilan hidup",
+  "eng": "Life skills instructor",
+  "ipa": "laɪf skɪlz ɪnˈstrʌktə",
+  "arb": "مُدَرِّسُ مَهَارَاتِ الْحَيَاةِ",
+  "jamak": "مُدَرِّسُو مَهَارَاتِ الْحَيَاةِ"
+},
+{
+  "no": 299,
+  "ind": "Pembimbing bimbingan akademik",
+  "eng": "Academic guidance mentor",
+  "ipa": "ˌækəˈdɛmɪk ˈɡaɪdəns ˈmɛntɔː",
+  "arb": "مُرْشِدُ التَّوْجِيهِ الأَكَادِيمِيِّ",
+  "jamak": "مُرْشِدُو التَّوْجِيهِ الأَكَادِيمِيِّ"
+},
+{
+  "no": 300,
+  "ind": "Petugas administrasi harian",
+  "eng": "Daily administrative staff",
+  "ipa": "ˈdeɪli ədˌmɪnɪˈstreɪtɪv stɑːf",
+  "arb": "مُوَظَّفُ الْإِدَارَةِ الْيَوْمِيِّ",
+  "jamak": "مُوَظَّفُو الْإِدَارَةِ الْيَوْمِيِّ"
+},
+{
+  "no": 301,
+  "ind": "Guru Matematika",
+  "eng": "Mathematics teacher",
+  "ipa": "ˌmæθəˈmætɪks ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الرِّيَاضِيَّاتِ",
+  "jamak": "مُعَلِّمُو الرِّيَاضِيَّاتِ"
+},
+{
+  "no": 302,
+  "ind": "Guru IPA",
+  "eng": "Science teacher",
+  "ipa": "ˈsaɪəns ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الْعُلُومِ",
+  "jamak": "مُعَلِّمُو الْعُلُومِ"
+},
+{
+  "no": 303,
+  "ind": "Guru IPS",
+  "eng": "Social studies teacher",
+  "ipa": "ˈsəʊʃəl ˈstʌdiz ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الدِّرَاسَاتِ الاِجْتِمَاعِيَّةِ",
+  "jamak": "مُعَلِّمُو الدِّرَاسَاتِ الاِجْتِمَاعِيَّةِ"
+},
+{
+  "no": 304,
+  "ind": "Guru Bahasa Indonesia",
+  "eng": "Indonesian language teacher",
+  "ipa": "ˌɪndəˈniːʒən ˈlæŋɡwɪdʒ ˈtiːtʃə",
+  "arb": "مُعَلِّمُ اللُّغَةِ الإِنْدُونِيسِيَّةِ",
+  "jamak": "مُعَلِّمُو اللُّغَةِ الإِنْدُونِيسِيَّةِ"
+},
+{
+  "no": 305,
+  "ind": "Guru Bahasa Inggris",
+  "eng": "English teacher",
+  "ipa": "ˈɪŋɡlɪʃ ˈtiːtʃə",
+  "arb": "مُعَلِّمُ اللُّغَةِ الإِنْجِلِيزِيَّةِ",
+  "jamak": "مُعَلِّمُو اللُّغَةِ الإِنْجِلِيزِيَّةِ"
+},
+{
+  "no": 306,
+  "ind": "Guru Bahasa Arab",
+  "eng": "Arabic teacher",
+  "ipa": "ˈærəbɪk ˈtiːtʃə",
+  "arb": "مُعَلِّمُ اللُّغَةِ الْعَرَبِيَّةِ",
+  "jamak": "مُعَلِّمُو اللُّغَةِ الْعَرَبِيَّةِ"
+},
+{
+  "no": 307,
+  "ind": "Guru PKN",
+  "eng": "Civics teacher",
+  "ipa": "ˈsɪvɪks ˈtiːtʃə",
+  "arb": "مُعَلِّمُ التَّرْبِيَةِ الْمُدَنِيَّةِ",
+  "jamak": "مُعَلِّمُو التَّرْبِيَةِ الْمُدَنِيَّةِ"
+},
+{
+  "no": 308,
+  "ind": "Guru Pendidikan Agama Islam",
+  "eng": "Islamic religious education teacher",
+  "ipa": "ɪzˈlæmɪk rɪˈlɪdʒəs ˌɛdjuˈkeɪʃən ˈtiːtʃə",
+  "arb": "مُعَلِّمُ التَّرْبِيَةِ الدِّينِيَّةِ الإِسْلَامِيَّةِ",
+  "jamak": "مُعَلِّمُو التَّرْبِيَةِ الدِّينِيَّةِ الإِسْلَامِيَّةِ"
+},
+{
+  "no": 309,
+  "ind": "Guru Seni Budaya",
+  "eng": "Cultural arts teacher",
+  "ipa": "ˈkʌltʃərəl ɑːts ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الْفُنُونِ وَالثَّقَافَةِ",
+  "jamak": "مُعَلِّمُو الْفُنُونِ وَالثَّقَافَةِ"
+},
+{
+  "no": 310,
+  "ind": "Guru TIK",
+  "eng": "ICT teacher",
+  "ipa": "aɪ siː tiː ˈtiːtʃə",
+  "arb": "مُعَلِّمُ تَقْنِيَّةِ الْمَعْلُومَاتِ وَالاتِّصَالِ",
+  "jamak": "مُعَلِّمُو تَقْنِيَّةِ الْمَعْلُومَاتِ وَالاتِّصَالِ"
+},
+{
+  "no": 311,
+  "ind": "Guru PJOK",
+  "eng": "Physical education teacher",
+  "ipa": "ˈfɪzɪkəl ˌɛdjuˈkeɪʃən ˈtiːtʃə",
+  "arb": "مُعَلِّمُ التَّرْبِيَةِ الْبَدَنِيَّةِ",
+  "jamak": "مُعَلِّمُو التَّرْبِيَةِ الْبَدَنِيَّةِ"
+},
+{
+  "no": 312,
+  "ind": "Guru Kewirausahaan",
+  "eng": "Entrepreneurship teacher",
+  "ipa": "ˌɒntrəprəˈnɜːʃɪp ˈtiːtʃə",
+  "arb": "مُعَلِّمُ رِيَادَةِ الْأَعْمَالِ",
+  "jamak": "مُعَلِّمُو رِيَادَةِ الْأَعْمَالِ"
+},
+{
+  "no": 313,
+  "ind": "Guru Prakarya",
+  "eng": "Craft teacher",
+  "ipa": "krɑːft ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الْحِرَفِ",
+  "jamak": "مُعَلِّمُو الْحِرَفِ"
+},
+{
+  "no": 314,
+  "ind": "Guru Ekonomi",
+  "eng": "Economics teacher",
+  "ipa": "ˌiːkəˈnɒmɪks ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الْاقْتِصَادِ",
+  "jamak": "مُعَلِّمُو الْاقْتِصَادِ"
+},
+{
+  "no": 315,
+  "ind": "Guru Geografi",
+  "eng": "Geography teacher",
+  "ipa": "dʒiˈɒɡrəfi ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الْجُغْرَافِيَا",
+  "jamak": "مُعَلِّمُو الْجُغْرَافِيَا"
+},
+{
+  "no": 316,
+  "ind": "Guru Sejarah",
+  "eng": "History teacher",
+  "ipa": "ˈhɪstəri ˈtiːtʃə",
+  "arb": "مُعَلِّمُ التَّارِيخِ",
+  "jamak": "مُعَلِّمُو التَّارِيخِ"
+},
+{
+  "no": 317,
+  "ind": "Guru Biologi",
+  "eng": "Biology teacher",
+  "ipa": "baɪˈɒlədʒi ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الْأَحْيَاءِ",
+  "jamak": "مُعَلِّمُو الْأَحْيَاءِ"
+},
+{
+  "no": 318,
+  "ind": "Guru Fisika",
+  "eng": "Physics teacher",
+  "ipa": "ˈfɪzɪks ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الْفِيزِيَاءَ",
+  "jamak": "مُعَلِّمُو الْفِيزِيَاءَ"
+},
+{
+  "no": 319,
+  "ind": "Guru Kimia",
+  "eng": "Chemistry teacher",
+  "ipa": "ˈkɛmɪstri ˈtiːtʃə",
+  "arb": "مُعَلِّمُ الْكِيمِيَاءَ",
+  "jamak": "مُعَلِّمُو الْكِيمِيَاءَ"
+}
+];
+
+    const tbody = document.querySelector('#vocabTable tbody');
+    function renderRows(list){
+      tbody.innerHTML = '';
+      for(const row of list){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="center">${row.no}</td>
+          <td><strong>${row.ind}</strong></td>
+          <td>${row.eng}</td>
+          <td class="small">${row.ipa}</td>
+          <td dir="rtl">${row.arb||''}</td>
+          <td class="col-jamak" dir="rtl">${row.jamak||''}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+    renderRows(data);
+
+    // filter pencarian
+    const search=document.getElementById('search');
+    const colFilter=document.getElementById('colFilter');
+    search.addEventListener('input',()=>applyFilter());
+    colFilter.addEventListener('change',()=>applyFilter());
+    function applyFilter(){
+      const q=search.value.trim().toLowerCase();
+      const col=colFilter.value;
+      const filtered=data.filter(r=>{
+        if(!q) return true;
+        if(col==='all'){
+          return (r.ind||'').toLowerCase().includes(q)||(r.eng||'').toLowerCase().includes(q)||(r.ipa||'').toLowerCase().includes(q)||(r.arb||'').toLowerCase().includes(q)||(r.jamak||'').toLowerCase().includes(q);
+        } else if(col==='indonesia') return (r.ind||'').toLowerCase().includes(q);
+        else if(col==='english') return (r.eng||'').toLowerCase().includes(q);
+        else if(col==='ipa') return (r.ipa||'').toLowerCase().includes(q);
+        else if(col==='arab') return (r.arb||'').toLowerCase().includes(q)||(r.jamak||'').toLowerCase().includes(q);
+        return true;
+      });
+      renderRows(filtered);
+    }
+
+    // download CSV
+    function toCSV(arr){
+      const header=['No','Indonesia','English','IPA','Arab (Mufrad)','Arab (Jamak)'];
+      const rows=[header].concat(arr.map(r=>[r.no,r.ind,r.eng,r.ipa,r.arb,r.jamak]));
+      return rows.map(r=>r.map(c=>c==null?'':String(c)).join(',')).join('\n');
+    }
+    document.getElementById('downloadCsv').addEventListener('click',()=>{
+      const csv=toCSV(data);
+      const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download='kosakata-sekolah.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    });
+
+    // download Excel
+    document.getElementById('downloadXls').addEventListener('click',()=>{
+      const table=document.getElementById('vocabTable').outerHTML;
+      const blob=new Blob([`\ufeff${table}`],{type:'application/vnd.ms-excel'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download='kosakata-sekolah.xls';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    });
+
+    // print
+    document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+    // sorting klik header
+    document.querySelectorAll('#vocabTable thead th').forEach((th,idx)=>{
+      th.style.cursor='pointer';
+      th.addEventListener('click',()=>{
+        const keyMap=['no','ind','eng','ipa','arb','jamak'];
+        const key=keyMap[idx]||'no';
+        const asc=th.dataset.asc==='1'?0:1;
+        data.sort((a,b)=>{
+          let A=(a[key]||'').toString().toLowerCase();
+          let B=(b[key]||'').toString().toLowerCase();
+          if(key==='no') return asc?a.no-b.no:b.no-a.no;
+          return asc?(A>B?1:-1):(A<B?1:-1);
+        });
+        document.querySelectorAll('#vocabTable thead th').forEach(x=>x.dataset.asc='0');
+        th.dataset.asc=asc?'1':'0';
+        renderRows(data);
+      });
+    });
+  </script>
+</body>
+</html>
